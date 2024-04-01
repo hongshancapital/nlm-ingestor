@@ -24,6 +24,7 @@ class TikaFileParser(FileParser):
             headers = {
                 "X-Tika-OCRskipOcr": "false",
                 "X-Tika-OCRoutputType": "hocr",
+                "X-Tika-OCRLanguage": "eng+chi_sim+chi_tra",
                 "X-Tika-Timeout-Millis": str(100 * timeout),
                 "X-Tika-PDFOcrStrategy": "ocr_only",
                 "X-Tika-OCRtimeoutSeconds": str(timeout),
