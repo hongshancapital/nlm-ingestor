@@ -307,3 +307,13 @@ def get_block_texts(blocks):
             block_texts.append(block["block_text"])
             block_info.append(block)
     return block_texts, block_info
+
+
+ARABIC_NUMBER_PATTERN = re.compile(r"^\d+(\.\d+)?$")
+
+
+def is_arabic_number(text: str):
+    """
+    Check if the text is an arabic number.
+    """
+    return bool(ARABIC_NUMBER_PATTERN.match(text))

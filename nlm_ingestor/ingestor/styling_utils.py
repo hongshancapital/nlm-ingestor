@@ -6,6 +6,7 @@ from statistics import median
 
 from nlm_ingestor.ingestor import formatter
 from nlm_ingestor.ingestor import line_parser
+from nlm_ingestor.ingestor_utils.utils import is_arabic_number
 from nlm_ingestor.ingestor_utils.word_splitter import WordSplitter
 
 ws = WordSplitter()
@@ -52,7 +53,7 @@ HELPER FUNCTIONS
 
 
 def font_weight_is_float(s):
-    return s.split(".")[0].isnumeric()
+    return is_arabic_number(s.split(".")[0])
 
 
 def get_p_styling_dict(style_str: str) -> dict:
@@ -169,7 +170,7 @@ def mode_of_list(fonts: list):
 def no_style_p_to_lines(p_item):
     lines = []
     p_text = unicodedata.normalize("NFKD", p_item.text)
-    if len(p_text) > 0 and not p_text.strip().isnumeric():
+    if len(p_text) > 0 and not is_arabic_number(p_text.strip()):
         text_lines = p_text.split("\n")
         for text in text_lines:
             line = ""
