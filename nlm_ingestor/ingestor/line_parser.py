@@ -6,6 +6,8 @@ import string
 
 from nltk.corpus import stopwords
 
+from nlm_ingestor.ingestor_utils.utils import is_arabic_number
+
 from .patterns import abbreviations
 from .patterns import states
 from .patterns import states_abbreviations
@@ -177,7 +179,7 @@ class Word:
         word = self.text.lower()
         if not word.isalpha():
             if word.isprintable():
-                if not word.isnumeric():
+                if not is_arabic_number(word):
                     if word.startswith("(") and word.endswith(")"):
                         word = word[1:-1]
                     if word.startswith("-"):
@@ -199,13 +201,12 @@ class Word:
                     if word.startswith("(") and word.endswith(")"):
                         word = word[1:-1]
                     word = word.replace(",", "")
-                    if word.isnumeric() or word.replace(".", "", 1).isnumeric():
-                        self.is_number = True
+                    self.is_number = is_arabic_number(word)
                     parts = word.split("-")
                     if (
                         len(parts) == 2
-                        and parts[0].isnumeric()
-                        and parts[1].isnumeric()
+                        and is_arabic_number(parts[0])
+                        and is_arabic_number(parts[1])
                     ):
                         self.is_number_range = True
                         self.parts = parts
