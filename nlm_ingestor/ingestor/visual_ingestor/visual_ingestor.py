@@ -2668,7 +2668,7 @@ class Doc:
                           and not block_within_table_bbox
             if table_ended:
                 table_start_set = False
-                if table_start_idx != table_end_idx:
+                if table_start_idx != table_end_idx and table_start_idx < len(organized_blocks):
                     # if vhu.count_cols(organized_blocks[-1] > 2):
                     #     table_start_idx = table_start_idx - 1
                     #     organized_blocks.pop()
@@ -2788,7 +2788,7 @@ class Doc:
             organized_blocks.pop()  # replace previous single block with combo
             organized_blocks.append(new_block)
 
-        if table_start_idx != table_end_idx:
+        if table_start_idx != table_end_idx and table_start_idx < len(organized_blocks):
             self.build_table(block_idx, organized_blocks, table_start_idx, table_end_idx + 1)
 
         i = 0
