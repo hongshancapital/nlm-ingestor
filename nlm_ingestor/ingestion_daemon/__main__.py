@@ -27,6 +27,7 @@ def parse_document(
     use_new_indent_parser = request.args.get('useNewIndentParser', 'no')
     apply_ocr = request.args.get('applyOcr', 'no')
     file = request.files['file']
+    original_filename = file.filename
     tmp_file = None
     try:
         parse_options = {
@@ -44,7 +45,7 @@ def parse_document(
         file.save(tmp_file)
         # calculate the file properties
         props = file_utils.extract_file_properties(tmp_file)
-        logger.info(f"Parsing document: {filename}")
+        logger.info(f"Parsing document: '{original_filename}'")
         return_dict, _ = ingestor_api.ingest_document(
             filename,
             tmp_file,
@@ -58,9 +59,9 @@ def parse_document(
         )
 
     except Exception as e:
-        print("error uploading file, stacktrace: ", traceback.format_exc())
+        print(f"error uploading file '{original_filename}', stacktrace: ", traceback.format_exc())
         logger.error(
-            f"error uploading file, stacktrace: {traceback.format_exc()}",
+            f"error uploading file '{original_filename}', stacktrace: {traceback.format_exc()}",
             exc_info=True,
         )
         status, rc, msg = "fail", 500, str(e)
