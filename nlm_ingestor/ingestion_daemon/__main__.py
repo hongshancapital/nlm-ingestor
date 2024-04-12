@@ -8,6 +8,8 @@ from werkzeug.utils import secure_filename
 from nlm_ingestor.ingestor import ingestor_api
 from nlm_utils.utils import file_utils
 
+from nlm_ingestor.ingestor_utils.utils import normalize_kangxi_radicals
+
 app = Flask(__name__)
 
 # initialize logging
@@ -52,10 +54,22 @@ def parse_document(
             props["mimeType"],
             parse_options=parse_options,
         )
+
+        return_dict = return_dict or {}
+
+        if "result" in return_dict and "blocks" in return_dict["result"]:
+            return_dict["result"]["blocks"] = [
+                {
+                    **block,
+                    "sentences": [normalize_kangxi_radicals(sentence) for sentence in block["sentences"]]
+                } if "sentences" in block else block
+                for block in return_dict.get("result", {}).get("blocks", [])
+            ]
+
         if tmp_file and os.path.exists(tmp_file):
             os.unlink(tmp_file)
         return make_response(
-            jsonify({"status": 200, "return_dict": return_dict or {}}),
+            jsonify({"status": 200, "return_dict": return_dict}),
         )
 
     except Exception as e:
