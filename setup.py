@@ -29,7 +29,8 @@ setup(
         "mistune==2.0.3",
         "lxml==4.9.1",
         "unidecode",
-        "nlm-utils"        
+        "nlm-utils",
+        "boto3==1.34.79"
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

@@ -9,9 +9,10 @@ nltk
 python-magic
 numpy
 tqdm
-symspellpy>=6.7.0
-pandas>=1.2.4
+symspellpy==6.7.0
+pandas==1.2.4
 mistune==2.0.3
 lxml==4.9.1
 unidecode
 nlm-utils
+boto3==1.34.79
