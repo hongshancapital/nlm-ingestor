@@ -17,7 +17,10 @@ app = Flask(__name__)
 logger = logging.getLogger(__name__)
 logger.setLevel(cfg.log_level())
 
-s3_client = boto3.client('s3')
+s3_client = boto3.client(
+    's3',
+    region_name=os.environ['AWS_REGION'] if 'AWS_REGION' in os.environ else None
+)
 
 @app.route('/')
 def health_check():
