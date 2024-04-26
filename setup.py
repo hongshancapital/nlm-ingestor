@@ -30,7 +30,8 @@ setup(
         "lxml==4.9.1",
         "unidecode",
         "nlm-utils",
-        "boto3==1.34.79"
+        "boto3==1.34.79",
+        "html5lib==1.1"
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

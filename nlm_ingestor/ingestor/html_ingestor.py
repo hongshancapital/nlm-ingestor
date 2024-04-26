@@ -17,7 +17,7 @@ class HTMLIngestor:
             self.html = file_name
         else:
             f = codecs.open(file_name, 'r')
-            self.html = BeautifulSoup(f.read(), features="lxml")
+            self.html = BeautifulSoup(f.read(), features="html5lib")
             self.html = self.html.find("body")
         self.sec = sec
         self.blocks = []
