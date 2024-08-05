@@ -292,7 +292,7 @@ class IndentParser:
                             if l["list_type"] == new_class["list_type"]:
                                 if l_idx > prev_level:
                                     new_stack.append(new_class)
-                                elif l_idx == prev_level:
+                                elif l_idx == prev_level and new_stack:
                                     # Replace with the new class
                                     new_stack.pop()
                                     new_stack.append(new_class)
@@ -538,7 +538,7 @@ class IndentParser:
                                           left_aligned_same_class_list_header):
                             level = len(new_stack)
                             new_class_added = False
-                            if smaller_font_left_aligned or left_aligned_same_class_list_header:
+                            if (smaller_font_left_aligned or left_aligned_same_class_list_header) and new_stack:
                                 # Remove from the stack and replace it with the new class below.
                                 new_stack.pop()
                             if not larger_font_left_aligned or \
@@ -607,7 +607,7 @@ class IndentParser:
 
                                 block["parent_list_idx"] = block["block_idx"] - 1
                             return level, new_stack, indent_reason
-                        else:
+                        elif new_stack:
                             # new_stack.append(level_class_name)
                             new_stack.pop()
                     if not new_stack:
