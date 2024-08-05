@@ -1,5 +1,8 @@
+import re
+
 from nlm_ingestor.ingestor_utils.ing_named_tuples import BoxStyle, LineStyle
 
+word_font_pattern = re.compile(r"^(.+?),([^,]+),([^,]+),([^,]+),([^,]+),([^,]+)$")
 font_weights = {"normal": 400, "bold": 600, "bolder": 900, "lighter": 200}
 font_families = {"bold": 600, "light": 200}
 font_scale = 1.2
@@ -66,7 +69,7 @@ def parse_tika_style(style_str: str, text_str: str, page_width: float) -> dict:
         if "," in font_family and font_family in wf:
             new_font_family = font_family.replace(",", "-")
             wf = wf.replace(font_family, new_font_family)
-        wf_parts = wf.split(",")
+        wf_parts = word_font_pattern.match(wf).groups()
         wf_font_space_width = round(float(wf_parts[5]), 2)
         word_line_styles.append(
             LineStyle(
