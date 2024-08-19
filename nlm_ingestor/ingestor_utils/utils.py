@@ -545,3 +545,10 @@ def normalize_kangxi_radicals(text: str) -> str:
     for kangxi_radical, chinese_character in KANGXI_RADICAL_CHINESE_CHARACTER_MAPPING:
         text = text.replace(kangxi_radical, chinese_character)
     return text
+
+
+def is_integer(text: str | None) -> bool:
+    """
+    Check if all the characters in the text are integers.
+    """
+    return bool(re.fullmatch(r'\d+', text or ''))
