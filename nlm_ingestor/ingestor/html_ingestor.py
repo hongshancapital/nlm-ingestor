@@ -3,7 +3,7 @@ import logging
 from bs4 import BeautifulSoup, UnicodeDammit
 from nlm_ingestor.ingestor_utils.ing_named_tuples import LineStyle
 from nlm_ingestor.ingestor.visual_ingestor import block_renderer
-from nlm_ingestor.ingestor_utils.utils import sent_tokenize
+from nlm_ingestor.ingestor_utils.utils import sent_tokenize, is_integer
 from nlm_ingestor.ingestor import line_parser
 import codecs
 
@@ -209,7 +209,7 @@ class HTMLIngestor:
                             all_th = False
                         if col.get("colspan"):
                             header_group_flag = True
-                        col_spans.append(int(col.get("colspan")) if col.get("colspan") else 1)
+                        col_spans.append(int(col.get("colspan")) if is_integer(col.get("colspan")) else 1)
                     empty_cols.append(empty_col)
 
                     if not ''.join(col_text).strip():
