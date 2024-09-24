@@ -547,8 +547,25 @@ def normalize_kangxi_radicals(text: str) -> str:
     return text
 
 
-def is_integer(text: str | None) -> bool:
+def safe_int(value, fallback = 0) -> int:
     """
-    Check if all the characters in the text are integers.
+    Parse the integer from the value.
     """
-    return bool(re.fullmatch(r'\d+', text or ''))
+    try:
+        if isinstance(value, str):
+            value = value.strip()
+        return int(value)
+    except (ValueError, TypeError):
+        return fallback
+
+
+def safe_float(value, fallback = 0.0) -> float:
+    """
+    Parse the float from the value.
+    """
+    try:
+        if isinstance(value, str):
+            value = value.strip()
+        return float(value)
+    except (ValueError, TypeError):
+        return fallback

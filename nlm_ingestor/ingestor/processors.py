@@ -7,7 +7,7 @@ from . import formatter
 from . import line_parser
 from . import patterns
 from nlm_ingestor.ingestor_utils import spell_utils
-from nlm_ingestor.ingestor_utils.utils import sent_tokenize
+from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -540,20 +540,20 @@ def check_tr_alignment(prev_line, curr_line):
 
 def check_layout(prev_line, curr_line, prev_above_curr):
     prev_line_width = range(
-        int(prev_line.visual_line.min_x),
-        int(prev_line.visual_line.max_x),
+        safe_int(prev_line.visual_line.min_x),
+        safe_int(prev_line.visual_line.max_x),
     )
 
     # weird edge case
     if not prev_line_width:
         prev_line_width = range(
-            int(prev_line.visual_line.max_x),
-            int(prev_line.visual_line.min_x),
+            safe_int(prev_line.visual_line.max_x),
+            safe_int(prev_line.visual_line.min_x),
         )
 
     curr_line_width = range(
-        int(curr_line.visual_line.min_x),
-        int(curr_line.visual_line.max_x),
+        safe_int(curr_line.visual_line.min_x),
+        safe_int(curr_line.visual_line.max_x),
     )
 
     prev_line_width = set(prev_line_width)

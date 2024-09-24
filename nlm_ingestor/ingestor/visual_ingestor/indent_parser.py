@@ -1,5 +1,5 @@
 from nlm_ingestor.ingestor.visual_ingestor import table_parser
-from nlm_ingestor.ingestor_utils.utils import detect_block_center_aligned
+from nlm_ingestor.ingestor_utils.utils import detect_block_center_aligned, safe_int
 from nlm_ingestor.ingestor import line_parser
 import copy
 import operator
@@ -40,11 +40,12 @@ def get_list_item_sum(number, list_type):
     elif list_type == "integer" or list_type == "integer-dot":
         new_number = ""
         for c in number.split("."):
+            c = c.strip()
             if len(c) == 1:
                 new_number += "0"
             if c.isdigit():
                 new_number += c
-        return int(new_number)
+        return safe_int(new_number)
     elif list_type == "letter":
         return sum(ord(c) for c in number)
     else:
