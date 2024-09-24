@@ -1,4 +1,5 @@
 import copy
+from nlm_ingestor.ingestor_utils.utils import safe_int
 import numpy as np
 from collections import Counter
 
@@ -57,14 +58,14 @@ def get_alignment_count(prev_block, curr_block, force_check_curr_block=False):
                 if abs(alignment_deviation) <= 0.1:
                     center_alignment = True
                     break
-            if len(list(range(max(int(short_pos[1]), int(long_pos[1])),
-                              min(int(short_pos[2]), int(long_pos[2]))+1))) >= len(shorter_line[i]["text"]):
+            if len(list(range(max(safe_int(short_pos[1]), safe_int(long_pos[1])),
+                              min(safe_int(short_pos[2]), safe_int(long_pos[2]))+1))) >= len(shorter_line[i]["text"]):
                 within_bounds = True
                 break
         if left_alignment or right_alignment or center_alignment or within_bounds:
             if left_alignment and j == len(longer_line) - 1:
-                if list(range(max(int(short_pos[1]), int(long_pos[1])),
-                              min(int(short_pos[2]), int(long_pos[2]))+1)):
+                if list(range(max(safe_int(short_pos[1]), safe_int(long_pos[1])),
+                              min(safe_int(short_pos[2]), safe_int(long_pos[2]))+1)):
                     alignment_count = alignment_count + 1
                     alignment_pos.append(j)
             elif within_bounds and prev_block["block_type"] == curr_block["block_type"] == 'table_row':

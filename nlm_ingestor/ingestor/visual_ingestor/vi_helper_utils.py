@@ -1,6 +1,7 @@
 """
 Abode for all Visual Ingestor Helper Utils.
 """
+from nlm_ingestor.ingestor_utils.utils import safe_int
 import numpy as np
 
 
@@ -84,8 +85,8 @@ def find_num_cols(block):
         for col_vl in col_vls:
             col_box = col_vl['box_style']
             curr_box = curr_vl['box_style']
-            if list(range(max(int(col_box[1]), int(curr_box[1])),
-                          min(int(col_box[2]), int(curr_box[2]))+1)):
+            if list(range(max(safe_int(col_box[1]), safe_int(curr_box[1])),
+                          min(safe_int(col_box[2]), safe_int(curr_box[2]))+1)):
                 # We have an intersection point.
                 found_intersection = True
                 break

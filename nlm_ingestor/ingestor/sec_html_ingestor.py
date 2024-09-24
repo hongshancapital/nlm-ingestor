@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from nlm_ingestor.ingestor_utils.ing_named_tuples import LineStyle
 from nlm_ingestor.ingestor.visual_ingestor import block_renderer
-from nlm_ingestor.ingestor_utils.utils import sent_tokenize, is_integer
+from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize
 from nlm_ingestor.ingestor import line_parser
 import codecs
 
@@ -170,7 +170,7 @@ class SECDoc:
                             all_th = False
                         if col.get("colspan"):
                             header_group_flag = True
-                        col_spans.append(int(col.get("colspan")) if is_integer(col.get("colspan")) else 1)
+                        col_spans.append(safe_int(col.get("colspan"), 1))
 
                     table_row = {
                         "block_idx": len(self.blocks),

@@ -1,5 +1,6 @@
 from collections import Counter
 import nlm_ingestor.ingestor.visual_ingestor
+from nlm_ingestor.ingestor_utils.utils import safe_int
 
 """
 Contains utility functions for comparing and reconstructing
@@ -46,8 +47,8 @@ def calculate_discrete_overlap(p1, p2, small=True):
     larger or smaller span for
     computing overlap
     """
-    p1 = set(range(int(p1[0]), int(p1[1])))
-    p2 = range(int(p2[0]), int(p2[1]))
+    p1 = set(range(safe_int(p1[0]), safe_int(p1[1])))
+    p2 = range(safe_int(p2[0]), safe_int(p2[1]))
     if len(p1) > len(p2):
         if small:
             denominator = len(p2)

@@ -5,6 +5,7 @@ import multiprocessing as mp
 from itertools import groupby
 
 from bs4 import BeautifulSoup
+from nlm_ingestor.ingestor_utils.utils import safe_int
 from nlm_utils.storage import file_storage
 from pymongo import MongoClient
 from tika import parser
@@ -102,7 +103,7 @@ def compare_results(test, html_text):
             continue
         style = tag.get("style")
         if style and "margin-left: " in style and "px" in style:
-            indent = int(style.split("margin-left: ")[1].split("px")[0]) + 20
+            indent = safe_int(style.split("margin-left: ")[1].split("px")[0]) + 20
         elif not style and (tag.get("block_idx") or tag.get("block_idx") == "0"):
             indent = 20
         else:
@@ -270,7 +271,7 @@ if __name__ == "__main__":
     if args.doc_type:
         doc_type = args.doc_type
     if args.num_procs:
-        num_procs = int(args.num_procs)
+        num_procs = safe_int(args.num_procs)
     print(f"running script with -> docId: {doc_id_list}, docType: {doc_type}, num_procs: {num_procs}")
     if len(doc_id_list) > 0:
         for doc_id in doc_id_list:

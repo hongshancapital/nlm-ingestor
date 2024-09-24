@@ -3,6 +3,8 @@ from distutils import util as dutils
 from typing import List
 from typing import Optional
 
+from nlm_ingestor.ingestor_utils.utils import safe_int
+
 __CFG = dict()
 
 
@@ -31,7 +33,7 @@ def get_config_as_list(key, default: Optional[List] = []):
 
 
 def get_config_as_int(key, default=None):
-    return int(get_config(key, default))
+    return safe_int(get_config(key, default))
 
 
 def get_config_as_bool(key, default=None):
