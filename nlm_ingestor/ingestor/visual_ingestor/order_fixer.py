@@ -1,4 +1,5 @@
 from functools import cmp_to_key
+from nlm_ingestor.ingestor_utils.utils import safe_float, safe_int
 import numpy as np
 
 REORDER_DEBUG = False
@@ -445,8 +446,9 @@ class OrderFixer:
             top_diff = cb_1_box[0] - cb_2_box[0]
             left_diff = cb_1_box[1] - cb_2_box[1]
             if self.doc.have_y_overlap(cb_1["blocks"][0], cb_2["blocks"][0]) or \
-                    list(range(max(int(cb_1_blk_box[0]), int(cb_2_blk_box[0])),
-                               min(int(cb_1_blk_box[0] + cb_1_blk_box[4]), int(cb_2_blk_box[0] + cb_2_blk_box[4]))+1)):
+                    list(range(max(safe_int(cb_1_blk_box[0]), safe_int(cb_2_blk_box[0])),
+                               min(int(safe_float(cb_1_blk_box[0]) + safe_float(cb_1_blk_box[4])),
+                                   int(safe_float(cb_2_blk_box[0]) + safe_float(cb_2_blk_box[4])))+1)):
                 return left_diff
             else:
                 return top_diff
@@ -509,9 +511,9 @@ class OrderFixer:
                 top_diff = cb_1_box[0] - cb_2_box[0]
                 left_diff = cb_1_box[1] - cb_2_box[1]
                 # Check whether we have an intersection of y coordinate
-                if list(range(max(int(cb_1_box[0]), int(cb_2_box[0])),
-                              min(int(cb_1_last_box[0] + cb_1_last_box[4]),
-                                  int(cb_2_last_box[0] + cb_2_last_box[4]))+1)):
+                if list(range(max(safe_int(cb_1_box[0]), safe_int(cb_2_box[0])),
+                              min(int(safe_float(cb_1_last_box[0]) + safe_float(cb_1_last_box[4])),
+                                  int(safe_float(cb_2_last_box[0]) + safe_float(cb_2_last_box[4])))+1)):
                     return left_diff
                 else:
                     return top_diff

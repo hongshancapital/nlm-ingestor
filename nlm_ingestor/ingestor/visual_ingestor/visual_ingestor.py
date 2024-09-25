@@ -13,7 +13,7 @@ from itertools import groupby
 from bs4 import BeautifulSoup
 from timeit import default_timer
 
-from nlm_ingestor.ingestor_utils.utils import sent_tokenize
+from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize
 from nlm_ingestor.ingestor_utils.ing_named_tuples import BoxStyle, LineStyle, LocationKey
 from nlm_ingestor.ingestor.visual_ingestor import style_utils, table_parser, indent_parser, block_renderer, order_fixer
 from nlm_ingestor.ingestor import line_parser
@@ -1145,11 +1145,11 @@ class Doc:
                                 buf0_bstyle = group_buf[0]['box_style']
                                 prev_buf_bstyle = group_buf[-1]['box_style']
                                 buf_bstyle = line_info['box_style']
-                                if len(list(range(max(int(buf0_bstyle[1]), int(buf_bstyle[1])),
-                                                  min(int(buf0_bstyle[2]), int(buf_bstyle[2]))+1))) \
-                                        >= 0.4 * (int(buf_bstyle[2]) - int(buf_bstyle[1])) and \
-                                        list(range(max(int(buf0_bstyle[1]), int(prev_buf_bstyle[1])),
-                                                   min(int(buf0_bstyle[2]), int(prev_buf_bstyle[2]))+1)):
+                                if len(list(range(max(safe_int(buf0_bstyle[1]), safe_int(buf_bstyle[1])),
+                                                  min(safe_int(buf0_bstyle[2]), safe_int(buf_bstyle[2]))+1))) \
+                                        >= 0.4 * (safe_int(buf_bstyle[2]) - safe_int(buf_bstyle[1])) and \
+                                        list(range(max(safe_int(buf0_bstyle[1]), safe_int(prev_buf_bstyle[1])),
+                                                   min(safe_int(buf0_bstyle[2]), safe_int(prev_buf_bstyle[2]))+1)):
                                     # Mark as not a table_row if the first VL is more than
                                     # 40% the length of the current VL
                                     is_table_row = False
@@ -1268,8 +1268,8 @@ class Doc:
                         same_top = vhu.compare_top(line_info, vl) or (
                                 (vl['box_style'][4] <= line_info['box_style'][4]) and
                                 ((line_info["space"] >= 0 and
-                                  len(list(range(max(int(vl['box_style'][1]), int(line_info['box_style'][1])),
-                                                 min(int(vl['box_style'][2]), int(line_info['box_style'][2]))+1))) > 0)
+                                  len(list(range(max(safe_int(vl['box_style'][1]), safe_int(line_info['box_style'][1])),
+                                                 min(safe_int(vl['box_style'][2]), safe_int(line_info['box_style'][2]))+1))) > 0)
                                  or
                                  (line_info["space"] < 0 and block_buf[0]['box_style'][2] < line_info['box_style'][1]))
                         )
@@ -1873,8 +1873,8 @@ class Doc:
                         len(gap_bw_vls) > 0 and \
                         vl['box_style'][0] <= (prev_vl['box_style'][0] + (2 * prev_vl['box_style'][4])) and \
                         vl['text'].strip() not in ['$', '€', '£'] and \
-                        len(list(range(max(int(prev_vl['box_style'][1]), int(vl['box_style'][1])),
-                                       min(int(prev_vl['box_style'][2]), int(vl['box_style'][2]))+1))):
+                        len(list(range(max(safe_int(prev_vl['box_style'][1]), safe_int(vl['box_style'][1])),
+                                       min(safe_int(prev_vl['box_style'][2]), safe_int(vl['box_style'][2]))+1))):
                     should_merge = True
             if should_merge:
                 # print("merging: ", prev_vl["text"][0:80], "->", vl["text"][0:80], gap, normal_gap, is_justified, avg_merge_gap)
@@ -2388,8 +2388,8 @@ class Doc:
                     prev_box = left_most_vl['box_style']
                     curr_box = block_vl['box_style']
                     block_box = block['box_style']
-                    intersection_points = list(range(max(int(prev_box[1]), int(curr_box[1])),
-                                                     min(int(prev_box[2]), int(curr_box[2]))+1))
+                    intersection_points = list(range(max(safe_int(prev_box[1]), safe_int(curr_box[1])),
+                                                     min(safe_int(prev_box[2]), safe_int(curr_box[2]))+1))
 
                     if (intersection_points and not block_vl["line_style"] == left_most_vl["line_style"]) or \
                             block_box[1] < min_left or curr_box[3] > 0.6 * self.page_width or \
@@ -3397,8 +3397,8 @@ class Doc:
         line_text = only_text_pattern.sub("", line_text)  # re.sub(r"[^a-zA-Z]+", "", line_text)
         line_text = roman_only_pattern.sub("", line_text)
         return LocationKey(
-            int(box_style[0]),
-            int(box_style[1]),
+            safe_int(box_style[0]),
+            safe_int(box_style[1]),
             line_text
         )
 
