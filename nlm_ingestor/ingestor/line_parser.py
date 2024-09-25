@@ -6,7 +6,7 @@ import string
 
 from nltk.corpus import stopwords
 
-from nlm_ingestor.ingestor_utils.utils import is_arabic_number
+from nlm_ingestor.ingestor_utils.utils import is_arabic_number, safe_float
 
 from .patterns import abbreviations
 from .patterns import states
@@ -134,7 +134,7 @@ class Word:
         self.check_date()
         try:
             if n:
-                n = round(float(n))
+                n = round(safe_float(n))
                 if n > 0:
                     digits = int(math.log10(n)) + 1
                 elif n == 0:

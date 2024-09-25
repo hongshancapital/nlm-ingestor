@@ -6,6 +6,7 @@ import multiprocessing as mp
 from itertools import groupby
 
 from bs4 import BeautifulSoup
+from nlm_ingestor.ingestor_utils.utils import safe_int
 from nlm_utils.storage import file_storage
 from pymongo import MongoClient
 from tika import parser
@@ -267,7 +268,7 @@ if __name__ == "__main__":
     if args.doc_type:
         doc_type = args.doc_type
     if args.num_procs:
-        num_procs = int(args.num_procs)
+        num_procs = safe_int(args.num_procs)
     print(f"running script with -> docId: {doc_id_list}, docType: {doc_type}, num_procs: {num_procs}")
     if len(doc_id_list) > 0:
         for doc_id in doc_id_list:
