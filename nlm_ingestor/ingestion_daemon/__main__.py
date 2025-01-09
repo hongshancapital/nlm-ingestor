@@ -22,7 +22,7 @@ s3_client = boto3.client(
     region_name=os.environ['AWS_REGION'] if 'AWS_REGION' in os.environ else None
 )
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def health_check():
     return 'Service is running', 200
 
