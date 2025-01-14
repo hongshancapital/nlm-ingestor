@@ -161,6 +161,10 @@ def parse_blocks(
         use_new_indent_parser: bool = False,
 ):
     soup = BeautifulSoup(str(tika_html_doc), "html.parser")
+
+    for svg_tag in soup.find_all('svg'):
+        svg_tag.decompose()
+
     meta_tags = soup.find_all("meta")
     title = None
     for tag in meta_tags:
