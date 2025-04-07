@@ -106,7 +106,7 @@ def get_row(row):
         colon_rule = word[-1] == ":"
         if word == "of" and len(row_list) and prev_type != "str":
             str_buff += row_list.pop()
-            unit_list.pop()
+            unit_list.pop() if unit_list else None
 
         if numeric.search(word) is not None:
             if prev_type == "str":
