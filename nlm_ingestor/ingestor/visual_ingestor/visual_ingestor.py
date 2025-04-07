@@ -2068,8 +2068,8 @@ class Doc:
                     reprocess_num = 1
                     if included_prev_2_prev_blk:
                         reprocess_num = 2
-                        organized_blocks.pop()
-                    organized_blocks.pop()  # replace previous single block with combo
+                        organized_blocks.pop() if organized_blocks else None
+                    organized_blocks.pop() if organized_blocks else None  # replace previous single block with combo
                     idx = idx - 1  # reprocess the current block
                     block_idx = block_idx - reprocess_num
                     block = new_block
@@ -2753,8 +2753,8 @@ class Doc:
                     block["block_type"] = "header"
                     block["header_type"] = "parenthesized_hdr"
                 curr_block = block
-                block = organized_blocks.pop()
-                if block["block_type"] != "table_row" and curr_block["block_type"] != "table_row":
+                block = organized_blocks.pop() if organized_blocks else None
+                if block and block["block_type"] != "table_row" and curr_block["block_type"] != "table_row":
                     # Change the block_class and block_idx
                     block["block_class"], curr_block["block_class"] = curr_block["block_class"], block["block_class"]
                     block["block_idx"], curr_block["block_idx"] = curr_block["block_idx"], block["block_idx"]
@@ -2785,7 +2785,7 @@ class Doc:
                 print("merging last block", new_block["block_text"], new_block["block_type"])
             if new_block["block_type"] == "list_item":
                 new_block["list_type"] = Doc.get_list_item_subtype(new_block)
-            organized_blocks.pop()  # replace previous single block with combo
+            organized_blocks.pop() if organized_blocks else None  # replace previous single block with combo
             organized_blocks.append(new_block)
 
         if table_start_idx != table_end_idx and table_start_idx < len(organized_blocks):
