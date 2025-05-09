@@ -2765,15 +2765,16 @@ class Doc:
                             vhu.find_num_cols(curr_block)[0] > vhu.find_num_cols(table_row_with_max_cols)[0]:
                         table_row_with_max_cols = curr_block
                 organized_blocks.append(curr_block)
-            if block["block_type"] == "table_row":
-                if not table_row_with_max_cols or \
-                        vhu.find_num_cols(block)[0] > vhu.find_num_cols(table_row_with_max_cols)[0]:
-                    table_row_with_max_cols = block
-            organized_blocks.append(block)
+            if block:
+                if block["block_type"] == "table_row":
+                    if not table_row_with_max_cols or \
+                            vhu.find_num_cols(block)[0] > vhu.find_num_cols(table_row_with_max_cols)[0]:
+                        table_row_with_max_cols = block
+                organized_blocks.append(block)
+                block["block_idx"] = block_idx
+                prev_block = block
             idx = idx + 1
-            block["block_idx"] = block_idx
             block_idx = block_idx + 1
-            prev_block = block
 
         if len(block_buf) > 0:
             if prev_block:
