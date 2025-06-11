@@ -14,6 +14,12 @@ from nlm_ingestor.ingestor.visual_ingestor import block_renderer
 logger = logging.getLogger(__name__)
 logger.setLevel(cfg.log_level())
 
+if not logger.hasHandlers():
+    handler = logging.StreamHandler()
+    handler.setLevel(cfg.log_level())
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
 def parse_markdown_to_blocks(markdown_text):
     state = {}
 

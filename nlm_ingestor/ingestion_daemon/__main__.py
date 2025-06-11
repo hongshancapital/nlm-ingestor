@@ -17,6 +17,12 @@ app = Flask(__name__)
 logger = logging.getLogger(__name__)
 logger.setLevel(cfg.log_level())
 
+if not logger.hasHandlers():
+    handler = logging.StreamHandler()
+    handler.setLevel(cfg.log_level())
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
 s3_client = boto3.client(
     's3',
     region_name=os.environ['AWS_REGION'] if 'AWS_REGION' in os.environ else None
