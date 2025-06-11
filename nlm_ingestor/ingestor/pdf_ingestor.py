@@ -17,6 +17,13 @@ from nlm_ingestor.ingestor_utils import utils
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+if not logger.hasHandlers():
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
 text_only_pattern = re.compile(r"[^a-zA-Z]+")
 
 class PDFIngestor:

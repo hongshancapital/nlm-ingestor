@@ -12,6 +12,12 @@ from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+if not logger.hasHandlers():
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
 su = spell_utils.SpellUtil()
 
 

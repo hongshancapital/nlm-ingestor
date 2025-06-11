@@ -20,6 +20,13 @@ import numpy as np
 # initialize logging
 logger = logging.getLogger(__name__)
 logger.setLevel(cfg.log_level())
+
+if not logger.hasHandlers():
+    handler = logging.StreamHandler()
+    handler.setLevel(cfg.log_level())
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
 run_table_detection: bool = ensure_bool(os.getenv("RUN_TABLE_DETECTION", False))
 title_text_only_pattern = re.compile(r"[^a-zA-Z]+")
 title_delimiter_remove_pattern = re.compile(r"[.;'\"\-,\n\r]")
