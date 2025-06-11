@@ -1,6 +1,7 @@
 import logging
 import nlm_ingestor.ingestion_daemon.config as cfg
 import os
+import sys
 import tempfile
 import traceback
 from flask import Flask, request, jsonify, make_response
@@ -126,10 +127,18 @@ def parse_s3_url(s3url):
 
 
 def main():
+    # 配置根日志记录器，将日志输出到stderr
+    root_logger = logging.getLogger()
+    
+    if not root_logger.handlers:
+        handler = logging.StreamHandler(sys.stderr)
+        handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        root_logger.addHandler(handler)
+        root_logger.setLevel(cfg.log_level())
+        
+        
     logger.info("Starting ingestor service..")
     app.run(host="0.0.0.0", port=5001, debug=False)
 
 if __name__ == "__main__":
     main()
-
-
