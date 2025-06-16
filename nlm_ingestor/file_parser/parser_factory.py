@@ -5,6 +5,11 @@ import nlm_ingestor.ingestion_daemon.config as cfg
 logger = logging.getLogger(__name__)
 logger.setLevel(cfg.log_level())
 
+if not logger.hasHandlers():
+    handler = logging.StreamHandler()
+    handler.setLevel(cfg.log_level())
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
 
 class FileParserFactory:
     """Factory for parser instances for various formats"""
