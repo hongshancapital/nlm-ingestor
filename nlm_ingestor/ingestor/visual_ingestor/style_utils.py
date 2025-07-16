@@ -69,7 +69,10 @@ def parse_tika_style(style_str: str, text_str: str, page_width: float) -> dict:
         if "," in font_family and font_family in wf:
             new_font_family = font_family.replace(",", "-")
             wf = wf.replace(font_family, new_font_family)
-        wf_parts = word_font_pattern.match(wf).groups()
+        word_font_match_result = word_font_pattern.match(wf)
+        wf_parts = word_font_match_result.groups() if word_font_match_result else []
+        if len(wf_parts) < 6:
+            continue
         wf_font_space_width = round(float(wf_parts[5]), 2)
         word_line_styles.append(
             LineStyle(
