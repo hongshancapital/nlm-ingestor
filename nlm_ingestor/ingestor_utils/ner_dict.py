@@ -4,6 +4,7 @@ import re
 from string import punctuation
 from typing import List, Dict
 from unidecode import unidecode
+from nlm_ingestor.ingestor_utils.utils import safe_open
 
 STOPWORDS_GENE = [
     'a',
@@ -181,11 +182,11 @@ class NERDict:
         return self.ner_dict
 
     def load_ner_dict_from_json(self, json_file: str):
-        with open(json_file) as read_file:
+        with safe_open(json_file) as read_file:
             self.ner_dict = json.load(read_file)
 
     def save_ner_dict_to_json(self, json_file: str):
-        with open(json_file, 'w') as write_file:
+        with safe_open(json_file, 'w') as write_file:
             json.dump(self.ner_dict, write_file, indent=2)
 
     def find_keys_in_text(self, text: str, stop_words: List[str]):

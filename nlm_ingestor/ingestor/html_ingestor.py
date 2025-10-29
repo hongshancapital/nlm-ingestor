@@ -3,7 +3,7 @@ import logging
 from bs4 import BeautifulSoup, UnicodeDammit
 from nlm_ingestor.ingestor_utils.ing_named_tuples import LineStyle
 from nlm_ingestor.ingestor.visual_ingestor import block_renderer
-from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize
+from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize, safe_open
 from nlm_ingestor.ingestor import line_parser
 import codecs
 
@@ -16,11 +16,11 @@ class HTMLIngestor:
         if str(type(file_name)) == "<class 'bs4.element.Tag'>":
             self.html = file_name
         else:
-            with open(file_name, 'rb') as f:
+            with safe_open(file_name, 'rb') as f:
                 raw_data = f.read()
                 suggestion = UnicodeDammit(raw_data)
-            f = codecs.open(file_name, 'r', encoding=suggestion.original_encoding, errors='ignore')
-            self.html = BeautifulSoup(f.read(), features="html5lib")
+            with safe_open(file_name, 'r', encoding=suggestion.original_encoding, errors='ignore') as f:
+                self.html = BeautifulSoup(f.read(), features="html5lib")
             self.html = self.html.find("body")
         self.sec = sec
         self.blocks = []

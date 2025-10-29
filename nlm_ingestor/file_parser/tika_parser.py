@@ -6,6 +6,7 @@ from tika import parser
 
 from nlm_ingestor.file_parser.file_parser import FileParser
 from nlm_utils.utils.utils import ensure_bool
+from nlm_ingestor.ingestor_utils.utils import safe_open
 
 
 class TikaFileParser(FileParser):
@@ -36,20 +37,20 @@ class TikaFileParser(FileParser):
 
     def parse_to_clean_html(self, filepath):
         if not find_tika_header(filepath):
-            with open(filepath) as file:
+            with safe_open(filepath) as file:
                 file_data = BeautifulSoup(
                     file.read(), features="html.parser",
                 ).prettify()
             return parser.from_buffer(file_data, xmlContent=True)
         else:
-            with open(filepath) as file:
+            with safe_open(filepath) as file:
                 file_data = file.read()
             return {"metadata": "", "content": file_data, "status": ""}
 
 
 def find_tika_header(fp):
     try:
-        with open(fp) as file:
+        with safe_open(fp) as file:
             file_data = file.read()
             soup = BeautifulSoup(file_data, "html.parser")
             # print(str(soup.find_all('head')[0]))

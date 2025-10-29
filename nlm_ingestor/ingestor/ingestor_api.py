@@ -10,7 +10,7 @@ from timeit import default_timer
 
 import nlm_ingestor.ingestion_daemon.config as cfg
 from nlm_ingestor.file_parser import markdown_parser
-from nlm_ingestor.ingestor_utils.utils import NpEncoder
+from nlm_ingestor.ingestor_utils.utils import NpEncoder, safe_open, safe_unlink
 from nlm_ingestor.ingestor import html_ingestor, pdf_ingestor, xml_ingestor, text_ingestor
 from nlm_ingestor.file_parser import pdf_file_parser
 from nlm_utils.utils import ensure_bool
@@ -68,7 +68,7 @@ def ingest_document(
         else: # use tika parser as a catch all
             logger.info(f"defaulting to tika parser for mime_type {mime_type}")
             parsed_content = pdf_file_parser.parse_to_html(doc_location)
-            with open(doc_location, "w") as file:
+            with safe_open(doc_location, "w") as file:
                 file.write(parsed_content["content"])
             ingestor = html_ingestor.HTMLIngestor(doc_location)
             return_dict = {
@@ -76,7 +76,7 @@ def ingest_document(
             }
 
         if doc_location and os.path.exists(doc_location):
-            os.unlink(doc_location)
+            safe_unlink(doc_location)
             logger.info(f"File {doc_location} deleted")
         return return_dict, ingestor
 
