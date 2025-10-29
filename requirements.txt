@@ -8,7 +8,7 @@ bs4==0.0.2
 nltk==3.6.2
 python-magic==0.4.22
 numpy==1.24.4
-tqdm==4.66.2
+tqdm==4.66.3
 symspellpy==6.7.0
 pandas==1.5.3
 mistune==2.0.3
