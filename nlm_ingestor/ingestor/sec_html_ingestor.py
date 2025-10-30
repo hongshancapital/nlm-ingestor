@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from nlm_ingestor.ingestor_utils.ing_named_tuples import LineStyle
 from nlm_ingestor.ingestor.visual_ingestor import block_renderer
-from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize
+from nlm_ingestor.ingestor_utils.utils import safe_int, sent_tokenize, safe_open
 from nlm_ingestor.ingestor import line_parser
 import codecs
 
@@ -12,9 +12,9 @@ class SECDoc:
             self.html = file_name
         else:
             # f = codecs.open(file_name, 'r')
-            f = open(file_name, 'r')
-            # self.html = BeautifulSoup(f.read(), features="lxml")
-            self.html = BeautifulSoup(f.read(), 'html.parser')
+            with safe_open(file_name, 'r') as f:
+                # self.html = BeautifulSoup(f.read(), features="lxml")
+                self.html = BeautifulSoup(f.read(), 'html.parser')
             self.html = self.html.find("body").find()
         self.sec = sec
         self.blocks = []

@@ -9,7 +9,7 @@ from nlm_ingestor.ingestor import ingestor_api
 from nlm_utils.utils import file_utils
 import boto3
 
-from nlm_ingestor.ingestor_utils.utils import normalize_kangxi_radicals
+from nlm_ingestor.ingestor_utils.utils import normalize_kangxi_radicals, safe_unlink
 
 app = Flask(__name__)
 
@@ -91,7 +91,7 @@ def parse_document(
             ]
 
         if tmp_file and os.path.exists(tmp_file):
-            os.unlink(tmp_file)
+            safe_unlink(tmp_file)
         return make_response(
             jsonify({"status": 200, "return_dict": return_dict}),
         )
@@ -106,7 +106,7 @@ def parse_document(
 
     finally:
         if tmp_file and os.path.exists(tmp_file):
-            os.unlink(tmp_file)
+            safe_unlink(tmp_file)
     return make_response(jsonify({"status": status, "reason": msg}), rc)
 
 

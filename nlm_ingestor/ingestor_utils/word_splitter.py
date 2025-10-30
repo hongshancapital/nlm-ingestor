@@ -3,6 +3,7 @@ import re
 from math import log
 
 import nlm_ingestor.ingestor as ingestor
+from nlm_ingestor.ingestor_utils.utils import safe_open
 
 word_file = os.path.join(
     os.path.dirname(os.path.abspath(ingestor.__file__)), "../ingestor_utils/words.txt",
@@ -12,7 +13,7 @@ word_file = os.path.join(
 class WordSplitter:
     def __init__(self, word_file=word_file):
         # Build a cost dictionary, assuming Zipf's law and cost = -math.log(probability).
-        with open(word_file) as f:
+        with safe_open(word_file) as f:
             words = f.read().split()
             self._word2cost = {
                 k: log((i + 1) * log(len(words))) for i, k in enumerate(words)

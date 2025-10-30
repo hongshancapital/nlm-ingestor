@@ -569,3 +569,144 @@ def safe_float(value, fallback = 0.0) -> float:
         return float(value)
     except (ValueError, TypeError):
         return fallback
+
+
+def _get_allowed_directories():
+    """
+    Get the list of allowed directories: system temp folder and project root.
+    
+    Returns:
+        list: List of absolute paths to allowed directories
+    """
+    import os
+    import tempfile
+    
+    allowed_dirs = []
+    
+    # Add system temporary directory
+    temp_dir = tempfile.gettempdir()
+    allowed_dirs.append(os.path.abspath(temp_dir))
+    
+    # Add common temporary directory
+    if os.path.exists('/tmp'):
+        allowed_dirs.append('/tmp')
+    
+    # Add project root directory (two levels up from current file)
+    current_file = os.path.abspath(__file__)
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+    allowed_dirs.append(project_root)
+    
+    return allowed_dirs
+
+
+def _validate_path_safety(file_path: str) -> str:
+    """
+    Validate that a file path is safe and prevent path traversal attacks.
+    
+    Args:
+        file_path: The file path to validate
+    
+    Returns:
+        str: The validated absolute path
+    
+    Raises:
+        ValueError: If the path is unsafe or outside allowed directories
+    """
+    import os
+    from pathlib import Path
+    
+    if not file_path:
+        raise ValueError("File path cannot be empty")
+    
+    # Resolve to absolute path
+    abs_path = os.path.abspath(file_path)
+    
+    # Get allowed directories
+    allowed_dirs = _get_allowed_directories()
+    
+    # Check if path is within allowed directories
+    is_allowed = False
+    for allowed_dir in allowed_dirs:
+        try:
+            # Use os.path.commonpath to check if path is under allowed directory
+            common = os.path.commonpath([abs_path, allowed_dir])
+            if common == allowed_dir:
+                is_allowed = True
+                break
+        except ValueError:
+            # On Windows, paths on different drives will raise ValueError
+            continue
+    
+    if not is_allowed:
+        raise ValueError(
+            f"Access denied: path '{abs_path}' is outside allowed directories. "
+            f"Allowed directories: {allowed_dirs}"
+        )
+    
+    return abs_path
+
+
+def safe_open(file_path: str, mode: str = 'r', **kwargs):
+    """
+    Safe file opening function to prevent path traversal attacks.
+    
+    Only allows access to files in the following locations:
+    1. System temporary directory
+    2. Project root directory and its subdirectories
+    
+    Args:
+        file_path: The file path to open
+        mode: File opening mode ('r', 'w', 'rb', 'wb', etc.)
+        **kwargs: Additional arguments to pass to the built-in open() function
+    
+    Returns:
+        File object
+    
+    Raises:
+        ValueError: If the path is unsafe or outside allowed directories
+        
+    Examples:
+        >>> with safe_open('/tmp/myfile.txt', 'r') as f:
+        ...     content = f.read()
+        
+        >>> with safe_open('data/input.json', 'w') as f:
+        ...     f.write('{}')
+    """
+    validated_path = _validate_path_safety(file_path)
+    return open(validated_path, mode, **kwargs)
+
+
+def safe_unlink(file_path: str) -> None:
+    """
+    Safe file deletion function to prevent path traversal attacks.
+    
+    Only allows deletion of files in the following locations:
+    1. System temporary directory
+    2. Project root directory and its subdirectories
+    
+    If the file does not exist, the function returns silently without error.
+    
+    Args:
+        file_path: The file path to delete
+    
+    Raises:
+        ValueError: If the path is unsafe or outside allowed directories
+        OSError: If the path exists but is not a file (e.g., a directory)
+        
+    Examples:
+        >>> safe_unlink('/tmp/tempfile.txt')
+        >>> safe_unlink('output/result.json')
+    """
+    import os
+    
+    validated_path = _validate_path_safety(file_path)
+    
+    # If file doesn't exist, return silently
+    if not os.path.exists(validated_path):
+        return
+    
+    # Ensure it's a file and not a directory
+    if not os.path.isfile(validated_path):
+        raise OSError(f"Path is not a file: {file_path}")
+    
+    os.unlink(validated_path)

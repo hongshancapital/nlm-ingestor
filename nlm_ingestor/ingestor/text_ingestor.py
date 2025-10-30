@@ -1,7 +1,7 @@
 import json
 import logging
 from collections import namedtuple
-from nlm_ingestor.ingestor_utils.utils import NpEncoder
+from nlm_ingestor.ingestor_utils.utils import NpEncoder, safe_open
 from nlm_ingestor.ingestor_utils import utils
 from nlm_ingestor.ingestor.visual_ingestor import block_renderer
 from nlm_ingestor.ingestor_utils.ing_named_tuples import LineStyle
@@ -14,7 +14,7 @@ class TextIngestor:
         render_format = parse_options.get("render_format", "all") \
             if parse_options else "all"
        
-        with open(doc_location) as f:
+        with safe_open(doc_location) as f:
             raw_lines = f.readlines()
 
         blocks, _block_texts, _sents, _file_data, result, page_dim, num_pages = parse_blocks(

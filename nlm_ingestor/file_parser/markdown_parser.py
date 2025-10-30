@@ -3,7 +3,7 @@ import logging
 import os
 
 import mistune
-from nlm_ingestor.ingestor_utils.utils import sent_tokenize
+from nlm_ingestor.ingestor_utils.utils import sent_tokenize, safe_open
 
 import nlm_ingestor.ingestion_daemon.config as cfg
 from nlm_ingestor.ingestor_utils.ing_named_tuples import LineStyle
@@ -164,7 +164,7 @@ class MarkdownDocument:
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
         markdown_text = ""
-        with open(doc_location) as file:
+        with safe_open(doc_location) as file:
             markdown_text = file.read()
         self.blocks, self.html_str = parse_markdown_to_blocks(markdown_text)
         for block in self.blocks:
