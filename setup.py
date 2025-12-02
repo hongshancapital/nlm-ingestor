@@ -17,7 +17,7 @@ setup(
         "flask_restful==0.3.10",
         "flask_jsonpify==1.5.0",
         "gunicorn==22.0.0",
-        "werkzeug==3.0.6",
+        "werkzeug==3.1.4",
         "tika==2.6.0",
         "bs4==0.0.2",
         "nltk==3.6.2",
