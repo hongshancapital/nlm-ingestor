@@ -1061,6 +1061,7 @@ class Doc:
             if LINE_DEBUG:
                 print("new group at--->", line_info['text'])
         is_mixed_font = (
+                line_start_idx < len(line_info["word_classes"]) and
                 line_info["word_classes"][line_start_idx]
                 != line_info["word_classes"][-1]
         )
