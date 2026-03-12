@@ -443,6 +443,9 @@ def visual_header_check(prev_line, curr_line, same_font):
 
 
 def visual_header_from_stats(prev_line, curr_line, page_stats):
+    if not page_stats["fs_list"]:
+        return False
+
     prev_fs = prev_line.visual_line.fs
     curr_fs = curr_line.visual_line.fs
 

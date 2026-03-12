@@ -641,7 +641,7 @@ class Line:
 
         self.continuing_line = self.has_continuing_chars and not self.separate_line
 
-        self.has_spaced_characters = single_letter_word_count / self.word_count > 0.8
+        self.has_spaced_characters = self.word_count > 0 and single_letter_word_count / self.word_count > 0.8
 
         self.set_line_type()
 
