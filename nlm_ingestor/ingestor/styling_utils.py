@@ -586,7 +586,7 @@ def p_to_lines(p_items: list) -> list:
                     continue
             vertical_stack_count = 1
             # previous p_tag and current p_tag are likely on different lines
-            has_many_numbers = (
+            has_many_numbers = len(line_info["text_list"]) > 0 and (
                 sum(
                     [
                         1 if re.sub(r"[\$\%\,\.\-\']", "", word).isdigit() else 0

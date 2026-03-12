@@ -2491,9 +2491,9 @@ class Doc:
                 curr_top = block['box_style'][0]
                 prev_bottom = prev_top + prev_block['box_style'][4]
                 curr_bottom = curr_top + block['box_style'][4]
-                bottom_space = (curr_bottom - prev_bottom)/block['box_style'][4]
+                bottom_space = (curr_bottom - prev_bottom)/block['box_style'][4] if block['box_style'][4] else 0
                 top_diff = curr_top - prev_top
-                top_space = top_diff / prev_block['box_style'][4]
+                top_space = top_diff / prev_block['box_style'][4] if prev_block['box_style'][4] else 0
                 # print("...block::", block["block_text"][0:80])
                 # space_between_blocks = bottom_space
                 too_much_space = bottom_space > table_end_space_threshold and top_space > table_end_space_threshold
@@ -2586,6 +2586,7 @@ class Doc:
                                     # the previous row
                                     alignment_break = False
                                 elif alignment_break and \
+                                        len(block["visual_lines"]) > 0 and \
                                         align_count/len(block["visual_lines"]) >= align_threshold and \
                                         0 < block_idx - prev_table_row["block_idx"] < 3:
                                     # If most of the visual lines align and if the previous table row is within 3 blocks
@@ -3222,7 +3223,7 @@ class Doc:
                 # print(organized_blocks[row_idx]["block_text"])
                 align_count, prev_count, align_pos = table_parser.get_alignment_count(prev_block,
                                                                                       organized_blocks[row_idx])
-                if align_count / prev_count > 0.5 and len(set(align_pos)) > 1:
+                if prev_count > 0 and align_count / prev_count > 0.5 and len(set(align_pos)) > 1:
                     is_aligned = True
                     break
             if ((same_class or (is_aligned and
@@ -4228,9 +4229,10 @@ class Doc:
                 name_decider = False
                 if json_rec['noun_chunks']:
                     noun_chunk_str = " ".join(json_rec['noun_chunks'])
+                    effective_word_count = json_rec['word_count'] - json_rec['stop_word_count']
                     if translated_str == noun_chunk_str or \
-                            (len(noun_chunk_str.split()) /
-                             (json_rec['word_count'] - json_rec['stop_word_count'])) > 0.75:
+                            (effective_word_count > 0 and
+                             len(noun_chunk_str.split()) / effective_word_count > 0.75):
                         name_decider = True
                 if not name_decider:
                     merged_text = temp_blocks[-1]["block_text"]
