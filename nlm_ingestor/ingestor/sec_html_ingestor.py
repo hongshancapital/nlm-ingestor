@@ -191,8 +191,9 @@ class SECDoc:
                     if all_th:
                         table_row["is_header"] = True
                     self.blocks.append(table_row)
-                self.blocks[table_start_idx]['is_table_start'] = True
-                self.blocks[-1]["is_table_end"] = True
+                if self.blocks and 0 <= table_start_idx < len(self.blocks):
+                    self.blocks[table_start_idx]['is_table_start'] = True
+                    self.blocks[-1]["is_table_end"] = True
                 i += len(child.findChildren(recursive=True))
 
             i += 1

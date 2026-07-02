@@ -81,7 +81,7 @@ class XMLIngestor:
                     #     print("\t" * (level + 1), line)
                     # print("\t" * (level + 1), "======")
                     col_blocks = processors.clean_lines(lines, xml=True)
-                    header_text = blocks[-1]["block_text"]
+                    header_text = blocks[-1]["block_text"] if blocks else ""
                     has_header = False
                     for block in col_blocks:
                         # print("\t" * (level + 1), block["block_text"])

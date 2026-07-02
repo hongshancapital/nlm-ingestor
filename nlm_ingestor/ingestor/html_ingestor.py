@@ -260,7 +260,7 @@ class HTMLIngestor:
                             t_block["list_type"] = ""
                         self.blocks.append(t_block)
 
-                if len(rows) > 1:
+                if len(rows) > 1 and self.blocks and 0 <= table_start_idx < len(self.blocks):
                     self.blocks[table_start_idx]['is_table_start'] = True
                     self.blocks[-1]["is_table_end"] = True
                     # Remove any empty columns if there are intersection
