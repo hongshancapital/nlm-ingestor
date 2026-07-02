@@ -138,8 +138,9 @@ def convert_mistune_to_table(token, level):
                 }
                 blocks.append(block)
 
-    blocks[0]["is_table_start"] = True
-    blocks[-1]["is_table_end"] = True
+    if blocks:
+        blocks[0]["is_table_start"] = True
+        blocks[-1]["is_table_end"] = True
 
     return blocks
 

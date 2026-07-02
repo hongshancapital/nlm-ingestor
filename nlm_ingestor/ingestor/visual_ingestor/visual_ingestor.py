@@ -3100,10 +3100,12 @@ class Doc:
         def blocks_to_list(start_idx, end_idx):
             header_text = ""
             header_idx = end_idx
-            while not header_text:
+            while not header_text and header_idx >= 0:
                 if blocks[header_idx]["block_type"] == "header":
                     header_text = blocks[header_idx]["block_text"]
                 header_idx -= 1
+            if not header_text:
+                return
             # convert block to list
             j = start_idx
             # get the longest span between table and header detection
@@ -3196,6 +3198,8 @@ class Doc:
         return (left, top, right, bottom)
 
     def calculate_block_bounds(self, blocks):
+        if not blocks:
+            return (0, 0, 0, 0)
         top = blocks[0]['box_style'][0]
         bottom = blocks[-1]['box_style'][0] + blocks[-1]['box_style'][4]
         left = 1000000
@@ -3618,6 +3622,11 @@ class Doc:
         return block
 
     def merge_blocks(self, blocks):
+        if not blocks:
+            return None
+        if len(blocks) == 1:
+            return blocks[0]
+
         merged_text = ""
         vls = []
         merge_vls_idx = 0
@@ -3632,8 +3641,6 @@ class Doc:
 
         if MERGE_DEBUG:
             print(f"merging {len(blocks)} blocks..")
-        if len(blocks) == 1:
-            return blocks[0]
         for block in blocks:
             any_block_table_row = any_block_table_row or (block["block_type"] == "table_row")
             if same_top and prev_block:
@@ -4355,7 +4362,8 @@ class Doc:
                          blk["block_type"] in ["header", "para"]) \
                     and blk["page_idx"] == temp_blocks[-1]["page_idx"] == 0 \
                     and ((centre_aligned_blk and last_temp_block_centre_aligned) or
-                         (centre_aligned_blk and self.detect_block_center_aligned(self.blocks[blk_idx - 1])) or
+                         (blk_idx > 0 and centre_aligned_blk and
+                          self.detect_block_center_aligned(self.blocks[blk_idx - 1])) or
                          (self.detect_block_center_aligned(blk, False) and last_temp_block_centre_aligned) or
                          temp_blocks[-1]['visual_lines'][-1]["line_parser"].get("last_word_is_co_ordinate_conjunction",
                                                                                 False)) \
